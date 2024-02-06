@@ -104,7 +104,7 @@ def generate_abc(args):
             print(f"Error: {e}")
             exit()
 
-    checkpoint = torch.load("weights.pth")
+    checkpoint = torch.load(filename)
     fixed_weights = {
         k: v
         for k, v in checkpoint["model"].items()
