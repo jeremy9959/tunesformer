@@ -2,3 +2,6 @@ __pycache__/
 output_tunes/
 weights/
 data/
+irishman/
+.ipynb_checkpoints/
+.virtual_documents/
