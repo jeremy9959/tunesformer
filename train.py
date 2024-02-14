@@ -16,7 +16,7 @@ else:
     device = torch.device("cpu")
     
 random.seed(42)
-batch_size = torch.cuda.device_count()
+batch_size = 1 # torch.cuda.device_count()
 patchilizer = Patchilizer()
 
 patch_config = GPT2Config(num_hidden_layers=PATCH_NUM_LAYERS, 
@@ -32,8 +32,8 @@ model = TunesFormer(patch_config, char_config, share_weights=SHARE_WEIGHTS)
 # print parameter number
 print("Parameter Number: "+str(sum(p.numel() for p in model.parameters() if p.requires_grad)))
 
-if torch.cuda.device_count() > 1:
-    model = torch.nn.DataParallel(model)
+# if torch.cuda.device_count() > 1:
+#    model = torch.nn.DataParallel(model)
 
 scaler = GradScaler()
 is_autocast = True
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     )
     if LOAD_FROM_CHECKPOINT and os.path.exists('weights.pth'):
         checkpoint = torch.load('weights.pth')
-        if torch.cuda.device_count() > 1:
+        if False: #torch.cuda.device_count() > 1:
             model.module.load_state_dict(checkpoint['model'])
         else:
             model.load_state_dict(checkpoint['model'])
@@ -189,7 +189,7 @@ if __name__ == "__main__":
         if eval_loss < min_eval_loss:
             best_epoch = epoch
             min_eval_loss = eval_loss
-            if torch.cuda.device_count() > 1:
+            if False: # torch.cuda.device_count() > 1:
                 checkpoint = { 
                 'model': model.module.state_dict(),
                 'optimizer': optimizer.state_dict(),
