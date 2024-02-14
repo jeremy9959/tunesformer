@@ -5,3 +5,7 @@ data/
 irishman/
 .ipynb_checkpoints/
 .virtual_documents/
+data.json
+logs.txt
+weights.pth
+
