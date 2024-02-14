@@ -2,7 +2,7 @@ import json
 from datasets import load_dataset
 import datasets
 
-print(f"Using datasets version {datasets.__version__})
+print(f"Using datasets version {datasets.__version__}")
 
 data = load_dataset("sander-wood/irishman")
 
