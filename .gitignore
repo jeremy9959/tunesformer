@@ -9,3 +9,4 @@ data.json
 logs.txt
 weights.pth
 slurm-*.out
+*.faiss
