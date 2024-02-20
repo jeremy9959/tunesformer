@@ -10,3 +10,5 @@ logs.txt
 weights.pth
 slurm-*.out
 *.faiss
+*.mid
+results/
