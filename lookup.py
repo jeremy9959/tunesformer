@@ -75,7 +75,7 @@ model = model.to(device)
 model.eval()
 
 # setup the faiss database
-index = faiss.read_index("index.faiss")
+index = faiss.read_index("indexIP.faiss")
 
 # load the dataset as a list of dictionaries
 with open("data.json", "r") as f:
@@ -101,30 +101,30 @@ with torch.no_grad():
     embedding = model.patch_level_decoder(batch)["last_hidden_state"].cpu().numpy()
 
 D, I = index.search(embedding.mean(1), 20)
-if not os.path.exists(f"results/{tune_name}"):
-    os.mkdir(f"results/{tune_name}")
-with open(f"results/{tune_name}/reference.abc", "w") as f:
+if not os.path.exists(f"resultsIP/{tune_name}"):
+    os.mkdir(f"resultsIP/{tune_name}")
+with open(f"resultsIP/{tune_name}/reference.abc", "w") as f:
     f.write(abc)
 subprocess.run(
     [
         "abc2midi",
-        f"results/{tune_name}/reference.abc",
+        f"resultsIP/{tune_name}/reference.abc",
         "-o",
-        f"results/{tune_name}/reference.mid",
+        f"resultsIP/{tune_name}/reference.mid",
     ]
 )
-with open(f"results/{tune_name}/index.txt", "w") as f:
+with open(f"resultsIP/{tune_name}/index.txt", "w") as f:
     for x in I[0]:
         f.write(f"{x}\n")
 
 for i, x in enumerate(I[0]):
-    with open(f"results/{tune_name}/tune_{str(i).zfill(3)}_{x}.abc", "w") as f:
+    with open(f"resultsIP/{tune_name}/tune_{str(i).zfill(3)}_{x}.abc", "w") as f:
         f.write(data[x]["abc notation"])
     subprocess.run(
         [
             "abc2midi",
-            f"results/{tune_name}/tune_{str(i).zfill(3)}_{x}.abc",
+            f"resultsIP/{tune_name}/tune_{str(i).zfill(3)}_{x}.abc",
             "-o",
-            f"results/{tune_name}/tune_{str(i).zfill(3)}_{x}.mid",
+            f"resultsIP/{tune_name}/tune_{str(i).zfill(3)}_{x}.mid",
         ]
     )

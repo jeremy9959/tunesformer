@@ -1,3 +1,4 @@
+# %%
 import torch
 from utils import *
 from config import *
@@ -30,17 +31,19 @@ checkpoint = torch.load("weights.pth")
 model.load_state_dict(checkpoint["model"])
 model = model.to(device)
 model.eval()
-
+# %%
+# faiss gpu
+res = faiss.StandardGpuResources()
 # setup the faiss database
 res = faiss.StandardGpuResources()
 index = faiss.IndexFlatL2(EMBEDDING_DIM)
-gpu_index = faiss.index_cpu_to_gpu(res,0,index)
-
+gpu_index = faiss.index_cpu_to_gpu(res, 0, index)
 # load the dataset as a list of dictionaries
 # each entry has "control code" and "abc notation" as keys
 with open("data.json", "r") as f:
     data = json.load(f)
 
+# %%
 for item in tqdm(data):
     text = item["control code"] + "\n".join(item["abc notation"].split("\n")[1:])
     input_patch = patchilizer.encode(text, add_special_patches=True)
@@ -49,8 +52,11 @@ for item in tqdm(data):
         [input_patch], batch_first=True, padding_value=0
     ).to(device)
     with torch.no_grad():
-        embedding = model.patch_level_decoder(batch)["last_hidden_state"].cpu().numpy()
-    index.add(embedding.mean(1))
+        embedding = (
+            model.patch_level_decoder(batch)["last_hidden_state"].detach().cpu().numpy()
+        )
+    gpu_index.add(embedding.mean(1))
 
 
 faiss.write_index(faiss.index_gpu_to_cpu(index), "gpu_index.faiss")
+
