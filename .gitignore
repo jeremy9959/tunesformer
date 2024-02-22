@@ -13,3 +13,4 @@ slurm-*.out
 *.mid
 results/
 resultsIP/
+faiss.index
