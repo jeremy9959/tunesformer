@@ -32,7 +32,9 @@ model = model.to(device)
 model.eval()
 
 # setup the faiss database
+res = faiss.StandardGpuResources()
 index = faiss.IndexFlatL2(EMBEDDING_DIM)
+gpu_index = faiss.index_cpu_to_gpu(res,0,index)
 
 # load the dataset as a list of dictionaries
 # each entry has "control code" and "abc notation" as keys
@@ -51,4 +53,4 @@ for item in tqdm(data):
     index.add(embedding.mean(1))
 
 
-faiss.write_index(index, "index.faiss")
+faiss.write_index(faiss.index_gpu_to_cpu(index), "gpu_index.faiss")
