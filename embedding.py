@@ -58,5 +58,5 @@ for item in tqdm(data):
     gpu_index.add(embedding.mean(1))
 
 
-faiss.write_index(faiss.index_gpu_to_cpu(index), "faiss/gpu_index.faiss")
+faiss.write_index(faiss.index_gpu_to_cpu(gpu_index), "faiss/gpu_index.faiss")
 

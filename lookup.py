@@ -68,18 +68,19 @@ char_config = GPT2Config(
     vocab_size=128,
 )
 model = TunesFormer(patch_config, char_config, share_weights=SHARE_WEIGHTS)
-filename = "weights.pth"
-checkpoint = torch.load("weights.pth")
+filename = "weights/weights.pth"
+checkpoint = torch.load(filename)
 model.load_state_dict(checkpoint["model"])
 model = model.to(device)
 model.eval()
 
 # setup the faiss database
-index = faiss.read_index("index.faiss")
+index = faiss.read_index("faiss/gpu_index.faiss")
 
 # load the dataset as a list of dictionaries
-with open("data.json", "r") as f:
+with open("data/data.json", "r") as f:
     data = json.load(f)
+
 
 abcfile = sys.argv[1]
 tune_name = abcfile.split("/")[-1].split(".")[0]
