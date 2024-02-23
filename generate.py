@@ -41,7 +41,7 @@ def generate_abc(args):
                         vocab_size=128)
     model = TunesFormer(patch_config, char_config, share_weights=SHARE_WEIGHTS)
 
-    filename = "weights.pth"
+    filename = "weights/weights.pth"
 
     if os.path.exists(filename):
         print(f"Weights already exist at '{filename}'. Loading...")
@@ -68,7 +68,7 @@ def generate_abc(args):
             print(f"Error: {e}")
             exit()
             
-    checkpoint = torch.load('weights.pth')
+    checkpoint = torch.load('weights/weights.pth')
     model.load_state_dict(checkpoint['model'])
     model = model.to(device)
     model.eval()

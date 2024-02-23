@@ -26,8 +26,8 @@ char_config = GPT2Config(
     vocab_size=128,
 )
 model = TunesFormer(patch_config, char_config, share_weights=SHARE_WEIGHTS)
-filename = "weights.pth"
-checkpoint = torch.load("weights.pth")
+filename = "weights/weights.pth"
+checkpoint = torch.load("weights/weights.pth")
 model.load_state_dict(checkpoint["model"])
 model = model.to(device)
 model.eval()
@@ -40,7 +40,7 @@ index = faiss.IndexFlatL2(EMBEDDING_DIM)
 gpu_index = faiss.index_cpu_to_gpu(res, 0, index)
 # load the dataset as a list of dictionaries
 # each entry has "control code" and "abc notation" as keys
-with open("data.json", "r") as f:
+with open("data/data.json", "r") as f:
     data = json.load(f)
 
 # %%
@@ -58,5 +58,5 @@ for item in tqdm(data):
     gpu_index.add(embedding.mean(1))
 
 
-faiss.write_index(faiss.index_gpu_to_cpu(index), "gpu_index.faiss")
+faiss.write_index(faiss.index_gpu_to_cpu(index), "faiss/gpu_index.faiss")
 
