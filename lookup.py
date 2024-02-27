@@ -15,7 +15,7 @@ import add_cc_filter
 EMBEDDING_DIM = 768
 FAISS_FILE = "faiss/gpu_index.faiss"
 DATAFILE = "data/data.json"
-OUTPUT_DIR = "{OUTPUT_DIR}"
+OUTPUT_DIR = "results"
 
 # load the trained model
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -48,9 +48,10 @@ with open(DATAFILE, "r") as f:
 
 
 abcfile = sys.argv[1]
-tune_name = abcfile.split("/")[-1].split(".")[0]
 with open(abcfile) as f:
     abc = f.read()
+tune_name = re.search(r"T:\s*(?P<tune_name>.*)", abc).group("tune_name")
+tune_name = tune_name.replace(" ", "_")
 
 # add the control codes following tunesformer code
 item = add_cc_filter.add_control_codes(abc)
@@ -68,14 +69,15 @@ D, I = index.search(embedding.mean(1), 20)
 
 if not os.path.exists(f"{OUTPUT_DIR}/{tune_name}"):
     os.mkdir(f"{OUTPUT_DIR}/{tune_name}")
-with open(f"{OUTPUT_DIR}/{tune_name}/reference.abc", "w") as f:
+with open(f"{OUTPUT_DIR}/{tune_name}/{tune_name}.abc", "w") as f:
     f.write(abc)
+
 subprocess.run(
     [
         "abc2midi",
-        f"{OUTPUT_DIR}/{tune_name}/reference.abc",
+        f"{OUTPUT_DIR}/{tune_name}/{tune_name}.abc",
         "-o",
-        f"{OUTPUT_DIR}/{tune_name}/reference.mid",
+        f"{OUTPUT_DIR}/{tune_name}/{tune_name}.mid",
     ]
 )
 with open(f"{OUTPUT_DIR}/{tune_name}/index.txt", "w") as f:
