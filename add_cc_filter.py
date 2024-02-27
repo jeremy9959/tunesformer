@@ -166,13 +166,12 @@ def run_filter(tune):
     return score.strip()
 
 
-tune = sys.stdin.read()
-tune = run_filter(tune)
-
-meta_data, merged_body_data = split_txt(tune)
-control_code, tune = add_tokens(meta_data, merged_body_data)
-if tune != "":
-    item = {}
-    item["control code"] = control_code
-    item["abc notation"] = "X:1\n" + tune
-print(item)
+def add_control_codes(tune):
+    tune = run_filter(tune)
+    meta_data, merged_body_data = split_txt(tune)
+    control_code, tune = add_tokens(meta_data, merged_body_data)
+    if tune != "":
+        item = {}
+        item["control code"] = control_code
+        item["abc notation"] = "X:1\n" + tune
+    return item
