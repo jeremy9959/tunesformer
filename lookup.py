@@ -51,6 +51,7 @@ abcfile = sys.argv[1]
 with open(abcfile) as f:
     abc = f.read()
 tune_name = re.search(r"T:\s*(?P<tune_name>.*)", abc).group("tune_name")
+tune_name = re.sub(r"[^a-zA-Z\s]", "", tune_name).lstrip().rstrip()
 tune_name = tune_name.replace(" ", "_")
 
 # add the control codes following tunesformer code
